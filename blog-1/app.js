@@ -37,18 +37,32 @@ const serverHandler = (req, res) => {
     getPostData(req).then(postData => {
         req.body = postData
         // 设置博客数据
-        const blogData = handleBlogRouter(req, res)
+        /* const blogData = handleBlogRouter(req, res)
         if(blogData){
             res.end(JSON.stringify(blogData))
+            return 
+        } */
+        const blogResult = handleBlogRouter(req, res)
+        if (blogResult) {
+            blogResult.then(blogData => {
+                res.end(JSON.stringify(blogData))
+                // encodeURI(res.end(JSON.stringify(blogData)),"utf-8")
+            })
             return 
         }
 
         // 设置登录
-        const userData = handleUserRouter(req, res)
-        if(userData){
-            res.end(JSON.stringify(userData))
+        const userResult = handleUserRouter(req, res)
+        if (userResult) {
+            userResult.then(userData => {
+                res.end(JSON.stringify(userData))
+            })
             return
         }
+       /*  if(userData){
+            res.end(JSON.stringify(userData))
+            return
+        } */
 
         // 链接找不到
         res.writeHead(404, {'Content-type': 'text/plain'})
